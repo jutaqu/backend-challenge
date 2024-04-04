@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Label List</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'task_list' %}">List Tasks</a></li>
+                <li><a href="{% url 'label_list' %}">List Labels</a></li>
+                {% else %}
+
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <h1>Label List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for label in labels %}
+            <tr>
+                <td>{{ label.name }}</td>
+                {% comment %} <td><a href="{% url 'update_task' task.pk %}"> Update </a></td>
+                <td><a href="{% url 'delete_task' task.pk %}"> Delete </a></td> {% endcomment %}
+            </tr>
+            {% empty %}
+                <li>No labels found.</li>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'create_label' %}">Create Label</a>
+</body>
+</html>

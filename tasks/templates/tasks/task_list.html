@@ -6,6 +6,18 @@
     <title>Task List</title>
 </head>
 <body>
+    <header>
+        <nav>
+            <ul>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'task_list' %}">List Tasks</a></li>
+                <li><a href="{% url 'label_list' %}">List Labels</a></li>
+                {% else %}
+
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
     <h1>Task List</h1>
     <table>
         <thead>
@@ -32,6 +44,8 @@
                 <td><a href="{% url 'update_task' task.pk %}"> Update </a></td>
                 <td><a href="{% url 'delete_task' task.pk %}"> Delete </a></td>
             </tr>
+            {% empty %}
+                <li>No labels found.</li>
             {% endfor %}
         </tbody>
     </table>

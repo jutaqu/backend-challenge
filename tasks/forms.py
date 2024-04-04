@@ -24,3 +24,16 @@ class TaskForm(ModelForm):
                 label='Completed?', required=False,
                 initial=initial_completion_status
                 )
+
+
+class LabelForm(ModelForm):
+    class Meta:
+        model = Label
+        fields = [
+            'name'
+        ]
+
+    def __init__(self, user=None, *args, **kwargs):
+        super(LabelForm, self).__init__(*args, **kwargs)
+        if user:
+            self.instance.owner = user
