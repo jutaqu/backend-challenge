@@ -9,4 +9,5 @@ urlpatterns = [
     path('delete/<int:pk>', views.delete_task, name='delete_task'),
     path('label_list/', views.label_list, name='label_list'),
     path('create_label/', views.create_label, name='create_label'),
+    path('label/<int:pk>/update/', views.update_label, name='update_label')
 ]

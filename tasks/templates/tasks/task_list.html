@@ -24,6 +24,7 @@
             <tr>
                 <th> Title </th>
                 <th> Description </th>
+                <th> Labels </th>
                 <th> Completed? </th>
                 <th> Update </th>
                 <th> Delete </th>
@@ -35,6 +36,12 @@
                 <td>{{ task.title }}</td>
                 <td>{{ task.description }}</td>
                 <td>
+                    <ul>
+                        {% for label in task.labels.all %}
+                            <li>{{ label.name }}</li>
+                        {% endfor %}
+                    <ul>
+                <td>
                     {% if task.completion_status %}
                         Completed
                     {% else %}
@@ -45,7 +52,7 @@
                 <td><a href="{% url 'delete_task' task.pk %}"> Delete </a></td>
             </tr>
             {% empty %}
-                <li>No labels found.</li>
+                <li>No tasks found.</li>
             {% endfor %}
         </tbody>
     </table>

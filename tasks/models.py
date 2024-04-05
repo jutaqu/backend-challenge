@@ -23,4 +23,7 @@ class Task(models.Model):
         related_name="tasks",
         on_delete=models.CASCADE,
     )
-    labels = models.ManyToManyField(Label, blank=True)
+    labels = models.ManyToManyField(Label, blank=True, related_name="tasks")
+
+    def __str__(self):
+        return self.title

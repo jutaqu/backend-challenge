@@ -15,9 +15,10 @@ def create_task(request):
     if request.method == 'POST':
         form = TaskForm(request.user, request.POST)
         if form.is_valid():
-            task = form.save(commit=False)
+            task = form.save(False)
             task.owner = request.user
             task.save()
+            form.save_m2m()
             return redirect('task_list')
     else:
         form = TaskForm(request.user)
@@ -32,16 +33,22 @@ def update_task(request, pk):
 
     if request.method == 'POST':
         form = TaskForm(request.user, request.POST, instance=task)
+        print("Is form bound:", form.is_bound)
+        print("Form errors:", form.errors)
         if form.is_valid():
-            task = form.save(commit=False)
-            task.owner = request.user
-            if 'completion_status' in form.cleaned_data:
-                task.completion_status = form.cleaned_data['completion_status']
+            cleaned_data = form.cleaned_data
+            print("Cleaned data:", cleaned_data)
+            task = form.save(False)
             task.save()
+            form.save_m2m()
+            print("Redirecting to task list view")
             return redirect('task_list')
+        else:
+            print("not working")
     else:
         form = TaskForm(request.user, instance=task)
-    return render(request, 'tasks/task_form.html', {'form': form})
+    return render(request, 'tasks/task_form.html',
+                  {'form': form})
 
 
 @login_required
@@ -75,4 +82,21 @@ def create_label(request):
         return redirect('label_list')
     else:
         form = LabelForm(request.user)
+    return render(request, 'tasks/label_form.html', {'form': form})
+
+
+@login_required
+def update_label(request, pk):
+    label = get_object_or_404(Label, pk=pk)
+    if label.owner != request.user:
+        return redirect('label_list')
+    if request.method == 'POST':
+        form = LabelForm(request.user, request.POST, instance=label)
+        if form.is_valid():
+            label = form.save(False)
+            label.owner = request.user
+            label.save()
+            return redirect('label_list')
+    else:
+        form = LabelForm(request.user, instance=label)
     return render(request, 'tasks/label_form.html', {'form': form})

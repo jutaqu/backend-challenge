@@ -8,21 +8,29 @@ class TaskForm(ModelForm):
         fields = [
             'title',
             'description',
-            'labels'
+            'labels',
+            'completion_status'
         ]
         widgets = {
             'labels': CheckboxSelectMultiple
         }
 
     def __init__(self, user=None, *args, **kwargs):
+        task_instance = kwargs.get('instance')
         super(TaskForm, self).__init__(*args, **kwargs)
         if user:
             self.instance.owner = user
-        if self.instance.pk:
-            initial_completion_status = self.instance.completion_status
-            self.fields['completion_status'] = BooleanField(
-                label='Completed?', required=False,
-                initial=initial_completion_status
+        if task_instance:
+            self.fields['completion_status'].label = 'Completed?'
+            self.fields['completion_status'].required = False
+
+            # Pre-populate title and description fields
+            self.initial['title'] = task_instance.title
+            self.initial['description'] = task_instance.description
+
+            # Pre-select labels associated with the task
+            self.initial['labels'] = task_instance.labels.values_list(
+                'pk', flat=True
                 )
 
 
