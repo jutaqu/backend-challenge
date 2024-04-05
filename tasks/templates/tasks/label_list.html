@@ -32,7 +32,7 @@
             <tr>
                 <td>{{ label.name }}</td>
                 <td><a href="{% url 'update_label' label.pk %}"> Update </a></td>
-                {% comment %} <td><a href="{% url 'delete_task' task.pk %}"> Delete </a></td> {% endcomment %}
+                <td><a href="{% url 'delete_label' label.pk %}"> Delete </a></td>
             </tr>
             {% empty %}
                 <li>No labels found.</li>

@@ -100,3 +100,17 @@ def update_label(request, pk):
     else:
         form = LabelForm(request.user, instance=label)
     return render(request, 'tasks/label_form.html', {'form': form})
+
+
+@login_required
+def delete_label(request, pk):
+    label = get_object_or_404(Label, pk=pk)
+    if label.owner != request.user:
+        return redirect('label_list')
+    if request.method == 'POST':
+        label.delete()
+        return redirect('label_list')
+    else:
+        return render(request, 'tasks/label_confirm_delete.html',
+                      {'label': label}
+                      )
