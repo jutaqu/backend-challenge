@@ -21,8 +21,11 @@ class TaskForm(ModelForm):
         if user:
             self.instance.owner = user
         if task_instance:
-            self.fields['completion_status'].label = 'Completed?'
-            self.fields['completion_status'].required = False
+            self.fields['completion_status'] = BooleanField(
+                label='Completed?',
+                required=False,
+                initial=task_instance.completion_status
+            )
 
             # Pre-populate title and description fields
             self.initial['title'] = task_instance.title

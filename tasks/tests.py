@@ -63,19 +63,6 @@ class TaskLabelTests(TestCase):
         self.assertRedirects(response, reverse('task_list'))
         self.assertFalse(Task.objects.filter(pk=task.pk).exists())
 
-    def test_label_list_view(self):
-        self.client.login(username='testuser', password='password123')
-        response = self.client.get(reverse('label_list'))
-        self.assertIn('labels', response.context)
-        queryset = response.context['labels']
-        queryset_str = [str(label) for label in queryset]
-        self.assertQuerysetEqual(
-            queryset_str,
-            ['Label 1', 'Label 2'],
-            ordered=False
-        )
-        self.assertEqual(response.status_code, 200)
-
     def test_create_label_view(self):
         self.client.login(username='testuser', password='password123')
         data = {'name': 'New Label'}

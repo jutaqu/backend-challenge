@@ -22,7 +22,11 @@ def create_task(request):
             return redirect('task_list')
     else:
         form = TaskForm(request.user)
-    return render(request, 'tasks/task_form.html', {'form': form})
+    user_labels = Label.objects.filter(owner=request.user)
+    print(user_labels)
+    return render(request, 'tasks/task_form.html',
+                  {'form': form, 'user_labels': user_labels}
+                  )
 
 
 @login_required
@@ -33,22 +37,18 @@ def update_task(request, pk):
 
     if request.method == 'POST':
         form = TaskForm(request.user, request.POST, instance=task)
-        print("Is form bound:", form.is_bound)
-        print("Form errors:", form.errors)
         if form.is_valid():
-            cleaned_data = form.cleaned_data
-            print("Cleaned data:", cleaned_data)
             task = form.save(False)
+            if 'completion_status' in form.cleaned_data:
+                task.completion_status = form.cleaned_data['completion_status']
             task.save()
             form.save_m2m()
-            print("Redirecting to task list view")
             return redirect('task_list')
-        else:
-            print("not working")
     else:
         form = TaskForm(request.user, instance=task)
+    user_labels = Label.objects.filter(owner=request.user)
     return render(request, 'tasks/task_form.html',
-                  {'form': form})
+                  {'form': form, 'user_labels': user_labels, 'task': task})
 
 
 @login_required

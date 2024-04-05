@@ -9,7 +9,21 @@
     <h1>{% if form.instance.pk %}Update Task{% else %}Create Task{% endif %}</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        <label>Title:</label><br>
+        {{ form.title }}<br>
+        <label>Description:</label><br>
+        {{ form.description }}<br>
+        <label>Labels:</label><br>
+        {% for label in user_labels %}
+            <input type="checkbox" id="label_{{ label.pk }}" name="labels" value="{{ label.pk }}">
+            <label for="label_{{ label.pk }}">{{ label.name }}</label><br>
+        {% endfor %}
+        {% if task.completion_status is not None %}
+        <div>
+            <label for="id_completion_status">Completed?</label>
+            {{ form.completion_status }}
+        </div>
+        {% endif %}
         <button type="submit">{% if form.instance.pk %}Update Task{% else %}Create Task{% endif %}</button>
     </form>
 </body>
